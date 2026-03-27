@@ -126,7 +126,7 @@ export default function RegistrationForm() {
                     target="_blank"
                     className="inline-flex items-center gap-3 bg-[#0068ff] text-white px-8 py-4 rounded-xl font-bold shadow-lg"
                   >
-                    <MessageCircle className="w-6 h-6" /> TƯ VẤN NGAY QUA ZALO
+                    📩 Gia nhập đội ngũ QTC LAND ngay
                   </a>
                 </motion.div>
               )}

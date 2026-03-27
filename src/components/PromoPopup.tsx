@@ -61,7 +61,7 @@ export default function PromoPopup() {
                   target="_blank"
                   className="block w-full border-2 border-primary text-primary py-4 rounded-xl font-bold hover:bg-primary/5 transition-colors"
                 >
-                  CHAT QUA ZALO
+                  📩 Gia nhập đội ngũ QTC LAND ngay
                 </a>
               </div>
             </div>

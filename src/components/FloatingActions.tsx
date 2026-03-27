@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Phone, MessageCircle, ChevronUp } from 'lucide-react';
+import { Phone, MessageCircle, ChevronUp, Mail } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function FloatingActions() {
@@ -29,7 +29,7 @@ export default function FloatingActions() {
         className="flex items-center gap-2 bg-[#0068ff] text-white p-3 rounded-full shadow-lg hover:bg-[#0056d2] transition-colors group"
       >
         <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-300 whitespace-nowrap px-0 group-hover:px-2 font-medium">
-          Chat Zalo
+          📩 Gia nhập đội ngũ QTC LAND ngay
         </span>
         <MessageCircle className="w-6 h-6" />
       </motion.a>
