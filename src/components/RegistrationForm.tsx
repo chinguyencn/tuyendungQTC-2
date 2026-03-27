@@ -11,11 +11,39 @@ type FormData = {
 
 export default function RegistrationForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
-    setIsSubmitted(true);
+  const onSubmit = async (data: FormData) => {
+    setIsSubmitting(true);
+    const webhookUrl = 'https://us-central1-zenleads-ai.cloudfunctions.net/publicWebhook/L9HUiPduOz1d1LIgh0ci';
+
+    try {
+      const response = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error('Lỗi máy chủ: ' + response.status);
+      }
+
+      const responseData = await response.json();
+
+      if (responseData.redirectTo) {
+        window.location.href = responseData.redirectTo;
+      } else {
+        setIsSubmitted(true);
+      }
+    } catch (error) {
+      console.error('Lỗi khi gửi form:', error);
+      alert('Đã có lỗi xảy ra. Vui lòng thử lại sau.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -57,13 +85,18 @@ export default function RegistrationForm() {
 
             <div className="lg:w-3/5 p-12">
               {!isSubmitted ? (
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                <form 
+                  id="contact-form-landing-page"
+                  onSubmit={handleSubmit(onSubmit)} 
+                  className="space-y-6"
+                >
                   <div>
                     <label className="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wider">
                       Họ và tên
                     </label>
                     <input
                       {...register("fullName", { required: true })}
+                      name="fullName"
                       placeholder="Nguyễn Văn A"
                       className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                     />
@@ -76,6 +109,7 @@ export default function RegistrationForm() {
                     </label>
                     <input
                       {...register("phone", { required: true, pattern: /^[0-9]{10}$/ })}
+                      name="phone"
                       placeholder="0901 234 567"
                       className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                     />
@@ -88,6 +122,7 @@ export default function RegistrationForm() {
                     </label>
                     <select
                       {...register("area", { required: true })}
+                      name="area"
                       className="w-full px-6 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all appearance-none"
                     >
                       <option value="">Chọn khu vực</option>
@@ -103,9 +138,10 @@ export default function RegistrationForm() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     type="submit"
-                    className="w-full bg-secondary text-white py-5 rounded-xl font-bold text-lg shadow-xl shadow-orange-500/30 flex items-center justify-center gap-3"
+                    disabled={isSubmitting}
+                    className="w-full bg-secondary text-white py-5 rounded-xl font-bold text-lg shadow-xl shadow-orange-500/30 flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed"
                   >
-                    GỬI ĐĂNG KÝ <Send className="w-5 h-5" />
+                    {isSubmitting ? 'ĐANG GỬI...' : 'GỬI ĐĂNG KÝ'} <Send className="w-5 h-5" />
                   </motion.button>
                 </form>
               ) : (
